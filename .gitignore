@@ -7,7 +7,7 @@ __pycache__
 *.pyc
 
 test/.pytest_cache
-
+logger
 data/out
 
 logs
