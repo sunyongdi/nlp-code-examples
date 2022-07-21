@@ -1,18 +1,19 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+.DS_Store
 
-# Other files and folders
-.settings/
+.idea
+.vscode
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+__pycache__
+*.pyc
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+test/.pytest_cache
+
+data/out
+
+logs
+checkpoints
+
+demo.py
+
+otherUtils.py
+module/Transformer_offical.py
