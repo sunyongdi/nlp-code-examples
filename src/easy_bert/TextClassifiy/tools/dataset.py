@@ -1,10 +1,31 @@
 import torch
 from torch.utils.data import Dataset
-import os
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
-from utils import load_pkl
+from ..utils import load_pkl
 
+
+def collate_fn(cfg):
+    def collate_fn_intra(batch):
+        """
+    Arg :
+        batch () : 数据集
+    Returna :
+        x (dict) : key为词，value为长度
+        y (List) : 关系对应值的集合
+    """
+        x, y = dict(), []
+        input_ids, attention_mask, token_type_ids = [], [], []
+        for data, label in batch:
+            input_ids.append(data['input_ids'])
+            attention_mask.append(data['attention_mask'])
+            token_type_ids.append(data['token_type_ids'])
+            y.append(int(label))
+        x['input_ids'] = torch.tensor(input_ids, dtype=torch.long)
+        x['attention_mask'] = torch.tensor(attention_mask, dtype=torch.long)
+        x['token_type_ids'] = torch.tensor(token_type_ids, dtype=torch.long)
+        y = torch.tensor(y, dtype=torch.float)
+        return x, y
+
+    return collate_fn_intra
 
 class CustomDataset(Dataset):
     """
@@ -15,7 +36,7 @@ class CustomDataset(Dataset):
         
     def __getitem__(self, item):
         sample = self.file[item]
-        return sample['text_a'], sample['label']
+        return sample['inputs'], sample['label']
 
     def __len__(self):
         return len(self.file)
