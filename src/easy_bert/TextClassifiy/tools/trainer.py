@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def loss_fn(outputs, targets):
     return nn.BCEWithLogitsLoss()(outputs, targets.view(-1, 1))
 
-def train(epoch, model, dataloader, optimizer, criterion, device, writer, cfg):
+def train(epoch, model, dataloader, optimizer, scheduler, criterion, device, writer, cfg):
     """
     training the model.
         Args:
@@ -38,10 +38,11 @@ def train(epoch, model, dataloader, optimizer, criterion, device, writer, cfg):
         optimizer.zero_grad()
         y_pred = model(x)
 
-        loss = loss_fn(y_pred, y)
-
+        loss = criterion(y_pred, y.view(-1, 1))
         loss.backward()
+        
         optimizer.step()
+        scheduler.step()
 
         metric.update(y_true=y, y_pred=y_pred)
         losses.append(loss.item())
@@ -95,10 +96,8 @@ def validate(epoch, model, dataloader, criterion, device, cfg):
         with torch.no_grad():
             y_pred = model(x)
 
-            if cfg.model_name == 'capsule':
-                loss = model.loss(y_pred, y)
-            else:
-                loss = criterion(y_pred, y)
+
+            loss = criterion(y_pred, y.view(-1, 1))
 
             metric.update(y_true=y, y_pred=y_pred)
             losses.append(loss.item())
@@ -114,4 +113,4 @@ def validate(epoch, model, dataloader, criterion, device, cfg):
         logger.info(f'Test Data: [{data_total}/{data_total}](100%)\t Loss: {loss:.6f}')
         logger.info(f'Test Data: Acc: {100. * acc:.2f}%\tmacro metrics: [p: {p:.4f}, r:{r:.4f}, f1:{f1:.4f}]')
 
-    return f1, 
+    return f1, loss

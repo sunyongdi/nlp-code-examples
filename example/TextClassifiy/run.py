@@ -5,7 +5,7 @@ from hydra import utils
 import torch
 from torch import nn as nn
 from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 from transformers import AdamW
 from transformers import get_linear_schedule_with_warmup
@@ -13,7 +13,7 @@ from transformers import get_linear_schedule_with_warmup
 import wandb
 import logging
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 from src.easy_bert.TextClassifiy.tools import train, validate, CustomDataset, preprocess, collate_fn
 from src.easy_bert.TextClassifiy.models.BasicBert import BERTBaseUncased
@@ -89,7 +89,8 @@ def main(cfg):
         optimizer, num_warmup_steps=0, num_training_steps=num_train_steps
     )
 
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.BCEWithLogitsLoss()
     
     best_f1, best_epoch = -1, 0
     es_loss, es_f1, es_epoch, es_patience, best_es_epoch, best_es_f1, es_path, best_es_path = 1e8, -1, 0, 0, 0, -1, '', ''
@@ -104,7 +105,7 @@ def main(cfg):
     
     for epoch in range(1, cfg.epoch + 1):
         manual_seed(cfg.seed + epoch)
-        train_loss = train(epoch, model, train_dataloader, optimizer, criterion, device, writer, cfg)
+        train_loss = train(epoch, model, train_dataloader, optimizer, scheduler, criterion, device, writer, cfg)
         valid_f1, valid_loss = validate(epoch, model, valid_dataloader, criterion, device, cfg)
         scheduler.step(valid_loss)
         model_path = model.save(epoch, cfg)

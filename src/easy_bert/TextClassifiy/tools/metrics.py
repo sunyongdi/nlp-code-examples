@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from abc import ABCMeta, abstractmethod
-from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 
 
 class Metric(metaclass=ABCMeta):
@@ -65,7 +65,14 @@ class PRMetric():
         """
         计算acc,p,r,f1并返回
         """
-        p, r, f1, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='macro', warn_for=tuple())
-        _, _, acc, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='micro', warn_for=tuple())
+        outputs = np.array(self.y_pred) >= 0.5
+        print(outputs)
+        print(self.y_true)
+        # p, r, f1, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='macro', warn_for=tuple())
+        # p, r, f1, _ = precision_recall_fscore_support(self.y_true, outputs, average='macro', warn_for=tuple())
+        # _, _, acc, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='micro', warn_for=tuple())
+        # acc = accuracy_score(self.y_true, self.y_pred)
+        acc = accuracy_score(self.y_true, outputs)
 
-        return acc, p, r, f1
+        # return acc, p, r, f1
+        return acc, 0, 0, 0

@@ -21,7 +21,7 @@ def _handle_tokenizer(data: List[Dict], cfg, tokenizer):
 
 
 def preprocess(cfg):
-    tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
+    tokenizer = BertTokenizer.from_pretrained(cfg.bert_path)
     train_fp = os.path.join(cfg.cwd, cfg.data_path, 'train.csv')
     valid_fp = os.path.join(cfg.cwd, cfg.data_path, 'valid.csv')
     test_fp = os.path.join(cfg.cwd, cfg.data_path, 'test.csv')
