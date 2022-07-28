@@ -3,36 +3,28 @@ gpu_id: 0
 
 # 原始数据存放位置
 use_gpu: True
-bert_path: '/root/NLP-learning-notes/pretrain_models/bert-base-chinese'
+bert_path: '/root/pretrained/bert-base-chinese'
 dropout: 0.3
 
-# 预处理后存放文件位置
-out_path: 'data/out'
 
 max_len: 256
 batch_size: 32
 
 name: bert
 num_hidden: 768
-
-train_batch_size: 32
-valid_batch_size: 16
-epoch: 20
-model_path: 'model.bin'
+epoch: 5
 num_classes: 1
 dataset_len: ???
-show_plot: False
-plot_utils: wandb
 seed: 1234
-tokenizer: ???
 train_log: True
 log_interval: 10
 learning_rate: 3e-4
 lr_factor: 0.7 # 学习率的衰减率
 lr_patience: 3 # 学习率衰减的等待epoch
 weight_decay: 1e-3 # L2正则
-
 early_stopping_patience: 6
-only_comparison_plot: False
 
+only_comparison_plot: False
 predict_plot: True
+show_plot: False
+plot_utils: wandb

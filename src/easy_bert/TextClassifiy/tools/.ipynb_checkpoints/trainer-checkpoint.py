@@ -37,12 +37,11 @@ def train(epoch, model, dataloader, optimizer, scheduler, criterion, device, wri
 
         optimizer.zero_grad()
         y_pred = model(x)
-
         loss = criterion(y_pred, y.view(-1, 1))
         loss.backward()
         
         optimizer.step()
-        scheduler.step()
+        # scheduler.step()
 
         metric.update(y_true=y, y_pred=y_pred)
         losses.append(loss.item())
@@ -57,15 +56,6 @@ def train(epoch, model, dataloader, optimizer, scheduler, criterion, device, wri
             logger.info(f'Train Epoch {epoch}: Acc: {100. * acc:.2f}%\t'
                         f'macro metrics: [p: {p:.4f}, r:{r:.4f}, f1:{f1:.4f}]')
 
-    if cfg.show_plot and not cfg.only_comparison_plot:
-        if cfg.plot_utils == 'matplot':
-            plt.plot(losses)
-            plt.title(f'epoch {epoch} train loss')
-            plt.show()
-
-        if cfg.plot_utils == 'tensorboard':
-            for i in range(len(losses)):
-                writer.add_scalar(f'epoch_{epoch}_training_loss', losses[i], i)
 
     return losses[-1]
 

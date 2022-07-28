@@ -22,21 +22,18 @@ def _handle_tokenizer(data: List[Dict], cfg, tokenizer):
 
 def preprocess(cfg):
     tokenizer = BertTokenizer.from_pretrained(cfg.bert_path)
-    train_fp = os.path.join(cfg.cwd, cfg.data_path, 'train.csv')
-    valid_fp = os.path.join(cfg.cwd, cfg.data_path, 'valid.csv')
-    test_fp = os.path.join(cfg.cwd, cfg.data_path, 'test.csv')
-
+    train_fp = os.path.join(cfg.cwd, cfg.data_path, 'train.tsv')
+    valid_fp = os.path.join(cfg.cwd, cfg.data_path, 'dev.tsv')
+    test_fp = os.path.join(cfg.cwd, cfg.data_path, 'test.tsv')
     logger.info('load raw files...')
-    train_data = load_csv(train_fp)
-    valid_data = load_csv(valid_fp)
-    test_data = load_csv(test_fp)
+    train_data = load_csv(train_fp, is_tsv=True)
+    valid_data = load_csv(valid_fp, is_tsv=True)
+    test_data = load_csv(test_fp, is_tsv=True)
 
-    logger.info('convert attribution into index...')
+    logger.info('verify whether use pretrained language models...')
     _handle_tokenizer(train_data, cfg, tokenizer)
     _handle_tokenizer(valid_data, cfg, tokenizer)
     _handle_tokenizer(test_data, cfg, tokenizer)
-
-    logger.info('verify whether use pretrained language models...')
     
     logger.info('save data for backup...')
     os.makedirs(os.path.join(cfg.cwd, cfg.out_path), exist_ok=True)

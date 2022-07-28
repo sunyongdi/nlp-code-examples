@@ -93,6 +93,8 @@ def save_csv(data: List[Dict], fp: Path, save_in_tsv: False, write_head=True, ve
         if write_head:
             writer.writeheader()
         writer.writerows(data)
+        
+
 
 
 def load_jsonld(fp: Path, verbose: bool = True) -> List:

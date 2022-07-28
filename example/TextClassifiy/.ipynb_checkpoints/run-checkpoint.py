@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 
 from transformers import AdamW
 from transformers import get_linear_schedule_with_warmup
-
+from transformers import BertTokenizer
 import wandb
 import logging
 
@@ -32,8 +32,9 @@ def main(cfg):
     # cwd = cwd[0:-5]
     cfg.cwd = cwd
     logger.info(f'\n{cfg.pretty()}')
-
-    wandb.init(project="test_nlp_tamplet", name=cfg.model_name)
+    # cfg.tokenizer = BertTokenizer.from_pretrained(cfg.bert_path)
+    wandb.init(project="nlpTask_TextClassifiy", name=cfg.model_name)
+    wandb.config.update(cfg)
     wandb.watch_called = False
     
     # device
@@ -83,7 +84,7 @@ def main(cfg):
         },
     ]
     cfg.dataset_len = len(train_dataset)
-    num_train_steps = int(cfg.dataset_len / cfg.train_batch_size * cfg.epoch)
+    num_train_steps = int(cfg.dataset_len / cfg.batch_size * cfg.epoch)
     optimizer = AdamW(optimizer_parameters, lr=3e-5)
     scheduler = get_linear_schedule_with_warmup(
         optimizer, num_warmup_steps=0, num_training_steps=num_train_steps
@@ -107,7 +108,8 @@ def main(cfg):
         manual_seed(cfg.seed + epoch)
         train_loss = train(epoch, model, train_dataloader, optimizer, scheduler, criterion, device, writer, cfg)
         valid_f1, valid_loss = validate(epoch, model, valid_dataloader, criterion, device, cfg)
-        scheduler.step(valid_loss)
+        
+        scheduler.step()
         model_path = model.save(epoch, cfg)
         # logger.info(model_path)
 
@@ -168,7 +170,11 @@ def main(cfg):
     })
     
     logger.info('=====ending====')
-
+    wandb.run.summary["best_es_epoch"] = best_es_epoch
+    wandb.run.summary["best_es_f1"] = best_es_f1
+    wandb.run.summary["best_epoch"] = best_epoch
+    wandb.run.summary["best_f1"] = best_f1
+    wandb.run.summary["best_es_path"] = best_es_path if best_es_path != '' else es_path
     
     
 if __name__ == '__main__':

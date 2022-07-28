@@ -55,8 +55,7 @@ class PRMetric():
         更新tensor，保留值，取消原有梯度
         """
         y_true = y_true.cpu().detach().numpy()
-        y_pred = y_pred.cpu().detach().numpy()
-        y_pred = np.argmax(y_pred, axis=-1)
+        y_pred = np.array(torch.sigmoid(y_pred).cpu().detach().numpy()) >= 0.5
 
         self.y_true = np.append(self.y_true, y_true)
         self.y_pred = np.append(self.y_pred, y_pred)
@@ -65,14 +64,9 @@ class PRMetric():
         """
         计算acc,p,r,f1并返回
         """
-        outputs = np.array(self.y_pred) >= 0.5
-        print(outputs)
-        print(self.y_true)
-        # p, r, f1, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='macro', warn_for=tuple())
-        # p, r, f1, _ = precision_recall_fscore_support(self.y_true, outputs, average='macro', warn_for=tuple())
-        # _, _, acc, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='micro', warn_for=tuple())
+        p, r, f1, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='macro', warn_for=tuple())
+        p, r, f1, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='macro', warn_for=tuple())
+        _, _, acc, _ = precision_recall_fscore_support(self.y_true, self.y_pred, average='micro', warn_for=tuple())
         # acc = accuracy_score(self.y_true, self.y_pred)
-        acc = accuracy_score(self.y_true, outputs)
 
-        # return acc, p, r, f1
-        return acc, 0, 0, 0
+        return acc, p, r, f1

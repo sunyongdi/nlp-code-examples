@@ -1,12 +1,9 @@
 # 是否需要预处理数据
 # 当数据处理参数没有变换时，不需要重新预处理
-preprocess: True
+preprocess: False
 
 # 原始数据存放位置
 data_path: 'data/origin'
 
 # 预处理后存放文件位置
 out_path: 'data/out'
-
-max_len: 256
-batch_size: 32
