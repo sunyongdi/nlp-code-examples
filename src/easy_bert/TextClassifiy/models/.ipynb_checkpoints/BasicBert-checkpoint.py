@@ -4,9 +4,9 @@ from . import BasicModule
 
 from transformers import BertModel
 
-class BERTBaseUncased(BasicModule):
+class BasicBert(BasicModule):
     def __init__(self, cfg):
-        super(BERTBaseUncased, self).__init__()
+        super(BasicBert, self).__init__()
         self.bert = BertModel.from_pretrained(cfg.bert_path)
         self.bert_drop = nn.Dropout(cfg.dropout)
         self.out = nn.Linear(cfg.num_hidden, cfg.num_classes)

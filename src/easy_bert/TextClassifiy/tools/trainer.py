@@ -1,7 +1,6 @@
 import torch
 from torch import nn as nn
 import logging
-import matplotlib.pyplot as plt
 from .metrics import PRMetric
 
 logger = logging.getLogger(__name__)

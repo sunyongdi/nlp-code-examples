@@ -9,7 +9,7 @@ cwd: ???
 defaults:
   - hydra/output: custom
   - preprocess
-  - model
-  # - train
+  - train
+  - model: bert   # [bert, bert_cnn, bert_dpcnn, bert_rcnn, bert_rnn]
   # - embedding
   # - predict

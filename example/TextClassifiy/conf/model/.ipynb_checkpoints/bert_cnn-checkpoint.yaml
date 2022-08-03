@@ -1,0 +1,10 @@
+model_name: bert_cnn
+
+bert_path: '/root/pretrained/bert-base-chinese'
+
+num_filters: 256
+hidden_size: 768
+filter_sizes: (2, 3, 4)
+dropout: 0.3
+num_classes: 1
+

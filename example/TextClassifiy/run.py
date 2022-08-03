@@ -1,4 +1,5 @@
 import os
+import time
 import hydra
 from hydra import utils
 
@@ -16,7 +17,7 @@ import logging
 # import matplotlib.pyplot as plt
 
 from src.easy_bert.TextClassifiy.tools import train, validate, CustomDataset, preprocess, collate_fn
-from src.easy_bert.TextClassifiy.models.BasicBert import BERTBaseUncased
+from src.easy_bert.TextClassifiy import models as models
 from src.easy_bert.TextClassifiy.utils.nnUtils import manual_seed
 
 import warnings
@@ -31,11 +32,21 @@ def main(cfg):
     cwd = utils.get_original_cwd()
     # cwd = cwd[0:-5]
     cfg.cwd = cwd
+    cfg.time_prefix = time.strftime('%Y-%m-%d_%H-%M-%S')
     logger.info(f'\n{cfg.pretty()}')
-    # cfg.tokenizer = BertTokenizer.from_pretrained(cfg.bert_path)
-    wandb.init(project="nlpTask_TextClassifiy", name=cfg.model_name)
+
+    wandb.init(project=cfg.task_name, name=cfg.model_name)
     wandb.config.update(cfg)
     wandb.watch_called = False
+    
+    __Model__ = {
+        'bert': models.BasicBert,
+        'bert_cnn': models.BertCNN,
+        'bert_dpcnn': models.BertDPCNN,
+        'bert_rcnn': models.BertRCNN,
+        'bert_rnn': models.BertRNN,
+    }
+
     
     # device
     if cfg.use_gpu and torch.cuda.is_available():
@@ -61,7 +72,7 @@ def main(cfg):
     valid_dataloader = DataLoader(valid_dataset, batch_size=cfg.batch_size, shuffle=True, collate_fn=collate_fn(cfg))
     test_dataloader = DataLoader(test_dataset, batch_size=cfg.batch_size, shuffle=True, collate_fn=collate_fn(cfg))
 
-    model = BERTBaseUncased(cfg)
+    model = __Model__[cfg.model_name](cfg)
     model.to(device)
 
     wandb.watch(model, log="all")
@@ -104,13 +115,13 @@ def main(cfg):
 
     logger.info('=' * 10 + ' Start training ' + '=' * 10)
     
-    for epoch in range(1, cfg.epoch + 1):
+    for epoch in range(cfg.epoch):
         manual_seed(cfg.seed + epoch)
         train_loss = train(epoch, model, train_dataloader, optimizer, scheduler, criterion, device, writer, cfg)
         valid_f1, valid_loss = validate(epoch, model, valid_dataloader, criterion, device, cfg)
         
         scheduler.step()
-        model_path = model.save(epoch, cfg)
+        # model_path = model.save(epoch, cfg)
         # logger.info(model_path)
 
         train_losses.append(train_loss)
@@ -124,6 +135,7 @@ def main(cfg):
         if best_f1 < valid_f1:
                 best_f1 = valid_f1
                 best_epoch = epoch
+                model_path = model.save(epoch, cfg)
         # 使用 valid loss 做 early stopping 的判断标准
         if es_loss > valid_loss:
             es_loss = valid_loss
@@ -167,6 +179,10 @@ def main(cfg):
 
     wandb.log({
         "test_loss":test_loss,
+    })
+    
+    wandb.log({
+        "best_f1":best_f1,
     })
     
     logger.info('=====ending====')

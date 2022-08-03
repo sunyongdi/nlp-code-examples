@@ -1,21 +1,17 @@
-model_name: bert
+# 任务名称
+task_name: 'Text Classification'
+
+# 使用gpu
+use_gpu: True
 gpu_id: 0
 
-# 原始数据存放位置
-use_gpu: True
-bert_path: '/root/pretrained/bert-base-chinese'
-dropout: 0.3
 
-
-max_len: 256
-batch_size: 32
-
-name: bert
-num_hidden: 768
 epoch: 5
-num_classes: 1
+batch_size: 32
 dataset_len: ???
+max_len: 256
 seed: 1234
+
 train_log: True
 log_interval: 10
 learning_rate: 3e-4
@@ -28,3 +24,4 @@ only_comparison_plot: False
 predict_plot: True
 show_plot: False
 plot_utils: wandb
+time_prefix: ???
