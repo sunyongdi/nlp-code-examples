@@ -5,5 +5,5 @@ bert_path: '/root/pretrained/bert-base-chinese'
 max_len: 256
 dropout: 0.3
 num_hidden: 768
-num_classes: 1
+num_classes: 2  # 119
 

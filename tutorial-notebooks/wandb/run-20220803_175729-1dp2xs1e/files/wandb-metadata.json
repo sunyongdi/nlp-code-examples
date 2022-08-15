@@ -1,0 +1,23 @@
+{
+    "os": "Linux-3.10.0-1062.el7.bclinux.x86_64-x86_64-with-glibc2.27",
+    "python": "3.9.7",
+    "heartbeatAt": "2022-08-03T09:57:31.382373",
+    "startedAt": "2022-08-03T09:57:29.560613",
+    "docker": null,
+    "gpu": "Tesla V100S-PCIE-32GB",
+    "gpu_count": 1,
+    "cpu_count": 72,
+    "cuda": "10.1.243",
+    "args": null,
+    "state": "running",
+    "program": "<python with no main file>",
+    "git": {
+        "remote": "https://github.com/sunyongdi/nlp-code-examples.git",
+        "commit": "5cfb1c03b007d705b3f12a2f752167b55d990ccd"
+    },
+    "email": "914767648@qq.com",
+    "root": "/root/projects/nlp-code-examples",
+    "host": "dl-220726163910351-pod-jupyter-54fcbd58-ft482",
+    "username": "root",
+    "executable": "/opt/conda/envs/pytorch1.8/bin/python"
+}

@@ -5,10 +5,8 @@ from .metrics import PRMetric
 
 logger = logging.getLogger(__name__)
 
-def loss_fn(outputs, targets):
-    return nn.BCEWithLogitsLoss()(outputs, targets.view(-1, 1))
 
-def train(epoch, model, dataloader, optimizer, scheduler, criterion, device, writer, cfg):
+def train(epoch, model, dataloader, optimizer, scheduler, criterion, device, cfg):
     """
     training the model.
         Args:
@@ -36,11 +34,10 @@ def train(epoch, model, dataloader, optimizer, scheduler, criterion, device, wri
 
         optimizer.zero_grad()
         y_pred = model(x)
-        loss = criterion(y_pred, y.view(-1, 1))
-        loss.backward()
         
+        loss = criterion(y_pred, y.to(device=device, dtype=torch.int64))
+        loss.backward()
         optimizer.step()
-        # scheduler.step()
 
         metric.update(y_true=y, y_pred=y_pred)
         losses.append(loss.item())
@@ -54,8 +51,6 @@ def train(epoch, model, dataloader, optimizer, scheduler, criterion, device, wri
                         f'Loss: {loss.item():.6f}')
             logger.info(f'Train Epoch {epoch}: Acc: {100. * acc:.2f}%\t'
                         f'macro metrics: [p: {p:.4f}, r:{r:.4f}, f1:{f1:.4f}]')
-
-
     return losses[-1]
 
 
@@ -85,8 +80,8 @@ def validate(epoch, model, dataloader, criterion, device, cfg):
         with torch.no_grad():
             y_pred = model(x)
 
-
-            loss = criterion(y_pred, y.view(-1, 1))
+            loss = criterion(y_pred, y.to(device=device, dtype=torch.int64))
+            # loss = criterion(y_pred, y.view(-1, 1))
 
             metric.update(y_true=y, y_pred=y_pred)
             losses.append(loss.item())

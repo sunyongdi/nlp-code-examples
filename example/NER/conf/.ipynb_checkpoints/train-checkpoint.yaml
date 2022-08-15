@@ -1,0 +1,25 @@
+# 任务名称
+task_name: 'NER'
+
+# 使用gpu
+use_gpu: True
+gpu_id: 0
+
+
+epoch: 5
+batch_size: 32
+dataset_len: ???
+max_len: 256
+seed: 1234
+
+train_log: True
+log_interval: 10
+learning_rate: 3e-4
+lr_factor: 0.7 # 学习率的衰减率
+lr_patience: 3 # 学习率衰减的等待epoch
+weight_decay: 1e-3 # L2正则
+early_stopping_patience: 6
+
+only_comparison_plot: False
+
+time_prefix: ???

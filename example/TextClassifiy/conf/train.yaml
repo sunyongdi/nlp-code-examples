@@ -7,7 +7,7 @@ gpu_id: 0
 
 
 epoch: 5
-batch_size: 32
+batch_size: 8
 dataset_len: ???
 max_len: 256
 seed: 1234
@@ -22,6 +22,7 @@ early_stopping_patience: 6
 
 only_comparison_plot: False
 predict_plot: True
-show_plot: False
-plot_utils: wandb
+
+show_plot: True
+plot_utils: tensorboard
 time_prefix: ???

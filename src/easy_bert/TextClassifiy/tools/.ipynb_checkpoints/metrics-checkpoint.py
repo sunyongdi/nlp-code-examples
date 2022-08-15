@@ -55,7 +55,8 @@ class PRMetric():
         更新tensor，保留值，取消原有梯度
         """
         y_true = y_true.cpu().detach().numpy()
-        y_pred = np.array(torch.sigmoid(y_pred).cpu().detach().numpy()) >= 0.5
+        y_pred = torch.max(y_pred.data, 1)[1].cpu()
+        # y_pred = np.array(torch.sigmoid(y_pred).cpu().detach().numpy()) >= 0.5
 
         self.y_true = np.append(self.y_true, y_true)
         self.y_pred = np.append(self.y_pred, y_pred)

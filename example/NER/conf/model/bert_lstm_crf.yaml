@@ -1,0 +1,13 @@
+model_name: bert_lstm_crf
+
+bert_path: '/root/pretrained/bert-base-chinese'
+
+need_birnn: False
+rnn_dim: 128
+hidden_dropout_prob: 0.3
+hidden_size: 768
+max_seq_length: 256
+learning_rate: 3e-5
+adam_epsilon: 1e-8
+warmup_steps: 0
+num_labels: 7
